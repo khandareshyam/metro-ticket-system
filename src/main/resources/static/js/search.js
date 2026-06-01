@@ -1,5 +1,5 @@
 function search() {
-  fetch("http://localhost:8080/api/routes")
+  fetch("/api/routes")
     .then(res => res.json())
     .then(data => {
       const box = document.getElementById("results");

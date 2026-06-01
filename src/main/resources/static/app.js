@@ -1,5 +1,4 @@
-const API = "http://localhost:8080/api";
-
+const API_BASE = "/api";
 let currentTicketId = null;
 let allStations = [];
 
