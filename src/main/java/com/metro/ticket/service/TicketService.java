@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Service
 public class TicketService {
@@ -20,79 +21,79 @@ public class TicketService {
             TicketRepository ticketRepo,
             StationRepository stationRepo,
             QRCodeService qrService) {
+
         this.ticketRepo = ticketRepo;
         this.stationRepo = stationRepo;
         this.qrService = qrService;
     }
 
-    /*
-     * =====================
-     * ISSUE TICKET
-     * =====================
-     */
     public Ticket issueRouteTicket(String fromStation, String toStation) {
 
         Station from = stationRepo.findByNameIgnoreCase(fromStation.trim())
-                .orElseThrow(() -> new RuntimeException("Invalid FROM station: " + fromStation));
+                .orElseThrow(() -> new RuntimeException("Invalid FROM station"));
 
         Station to = stationRepo.findByNameIgnoreCase(toStation.trim())
-                .orElseThrow(() -> new RuntimeException("Invalid TO station: " + toStation));
+                .orElseThrow(() -> new RuntimeException("Invalid TO station"));
 
         Ticket t = new Ticket();
 
-        t.setFromStation(fromStation);
-        t.setToStation(toStation);
-        t.setStatus("ACTIVE");
+        t.setFromStation(from.getName());
+        t.setToStation(to.getName());
 
-        String fromLine = from.getLine() == null ? "" : from.getLine();
-        String toLine = to.getLine() == null ? "" : to.getLine();
+        t.setPrimaryLine(from.getLine());
 
-        t.setPrimaryLine(fromLine);
-        t.setChangeRequired(!fromLine.equals(toLine));
+        t.setChangeRequired(
+                !from.getLine().equalsIgnoreCase(to.getLine()));
+
         t.setIssuedAt(LocalDateTime.now());
-        t.setValidUpto(LocalDateTime.now().plusHours(2));
+        t.setValidUpto(LocalDateTime.now().plusHours(5));
 
         int stationCount = Math.abs(from.getSequenceNo() - to.getSequenceNo()) + 1;
-        t.setFare(BigDecimal.valueOf(stationCount * 5));
 
-        String rawData = t.getFromStation() + "|" + t.getToStation() + "|" + System.currentTimeMillis();
+        BigDecimal fare = BigDecimal.valueOf(stationCount * 5L);
 
-        String token = java.util.Base64.getEncoder()
-                .encodeToString(rawData.getBytes());
+        t.setFare(fare);
+
+        t.setStatus("ACTIVE");
+
+        String qrText = from.getName()
+                + "|"
+                + to.getName()
+                + "|"
+                + System.currentTimeMillis();
+
+        String token = Base64.getEncoder()
+                .encodeToString(qrText.getBytes());
 
         t.setQrToken(token);
-        t.setQrCode(qrService.generateQrBytes(token));
+
+        try {
+            t.setQrCode(
+                    qrService.generateQrBytes(token));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return ticketRepo.save(t);
     }
 
-    /*
-     * =====================
-     * GET TICKET
-     * =====================
-     */
     public Ticket getTicketById(Long id) {
+
         return ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
     }
 
-    /*
-     * =====================
-     * GET QR
-     * =====================
-     */
     public byte[] getQr(Long id) {
+
         Ticket t = getTicketById(id);
         return t.getQrCode();
     }
 
-    /*
-     * =====================
-     * VALIDATE
-     * =====================
-     */
     public Ticket validateTicket(Long id) {
+
         Ticket t = getTicketById(id);
         t.setStatus("USED");
+
         return ticketRepo.save(t);
     }
 }

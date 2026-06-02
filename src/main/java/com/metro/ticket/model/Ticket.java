@@ -35,7 +35,14 @@ public class Ticket {
 
     @Column(name = "qr_token", unique = true)
     private String qrToken;
+    @Column(name = "ticket_number", unique = true)
+    private String ticketNumber;
 
+    @Column(name = "passengers")
+    private Integer passengers = 1;
+
+    @Column(name = "platform_no")
+    private Integer platformNo = 1;
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "qr_code", columnDefinition = "bytea")
@@ -127,5 +134,29 @@ public class Ticket {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public void setTicketNumber(String ticketNumber) {
+        this.ticketNumber = ticketNumber;
+    }
+
+    public Integer getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(Integer passengers) {
+        this.passengers = passengers;
+    }
+
+    public Integer getPlatformNo() {
+        return platformNo;
+    }
+
+    public void setPlatformNo(Integer platformNo) {
+        this.platformNo = platformNo;
     }
 }
