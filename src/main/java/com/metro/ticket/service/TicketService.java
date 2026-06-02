@@ -93,7 +93,8 @@ public class TicketService {
 
         Ticket t = getTicketById(id);
         t.setStatus("USED");
-
+        System.out.println("ISSUED = " + t.getIssuedAt());
+        System.out.println("VALID  = " + t.getValidUpto());
         return ticketRepo.save(t);
     }
 }
