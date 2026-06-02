@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API = "/api";
 let currentTicketId = null;
 let allStations = [];
 
