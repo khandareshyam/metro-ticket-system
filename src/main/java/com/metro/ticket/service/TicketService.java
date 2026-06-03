@@ -48,7 +48,11 @@ public class TicketService {
         LocalDateTime now = LocalDateTime.now();
 
         t.setIssuedAt(now);
-
+        System.out.println("NOW = " + now);
+        System.out.println("VALID UPTO = " +
+                now.toLocalDate()
+                        .plusDays(1)
+                        .atTime(0, 30));
         // Valid till 12:30 AM next day (like Pune Metro ticket)
         t.setValidUpto(
                 now.toLocalDate()
