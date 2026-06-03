@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.time.ZoneId;
+
+import java.time.ZonedDateTime;
 
 @Service
 public class TicketService {
@@ -45,8 +48,11 @@ public class TicketService {
         t.setChangeRequired(
                 !from.getLine().equalsIgnoreCase(to.getLine()));
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now =
 
+                ZonedDateTime.now(ZoneId.of("Asia/Kolkata"))
+
+                        .toLocalDateTime();
         t.setIssuedAt(now);
         System.out.println("NOW = " + now);
         System.out.println("VALID UPTO = " +
@@ -61,7 +67,21 @@ public class TicketService {
 
         int stationCount = Math.abs(from.getSequenceNo() - to.getSequenceNo()) + 1;
 
-        BigDecimal fare = BigDecimal.valueOf(stationCount * 5L);
+        BigDecimal fare;
+
+        if (stationCount <= 4) {
+            fare = BigDecimal.valueOf(10);
+        } else if (stationCount <= 8) {
+            fare = BigDecimal.valueOf(15);
+        } else if (stationCount <= 12) {
+            fare = BigDecimal.valueOf(20);
+        } else if (stationCount <= 16) {
+            fare = BigDecimal.valueOf(25);
+        } else if (stationCount <= 20) {
+            fare = BigDecimal.valueOf(30);
+        } else {
+            fare = BigDecimal.valueOf(35);
+        }
 
         t.setFare(fare);
 
