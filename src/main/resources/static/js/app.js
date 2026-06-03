@@ -111,7 +111,7 @@ function formatDate(d) {
 }
 function renderTicket(t) {
     const box = document.getElementById("ticketBox");
-
+console.log(t);
     box.innerHTML = `
         <div class="receipt">
 

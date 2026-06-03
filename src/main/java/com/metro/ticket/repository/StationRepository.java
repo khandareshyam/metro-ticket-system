@@ -5,8 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface StationRepository
-        extends JpaRepository<Station, Long> {
+public interface StationRepository extends JpaRepository<Station, Long> {
 
-    Optional<Station> findByNameIgnoreCase(String name);
+    Optional<Station> findFirstByNameIgnoreCase(String name);
+
+    Optional<Station> findByNameIgnoreCaseAndLineIgnoreCase(
+            String name,
+            String line);
 }
