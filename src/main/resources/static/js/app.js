@@ -106,12 +106,19 @@ async function createTicket() {
     }
 }
 /* RENDER */
+/* RENDER */
 function formatDate(d) {
     return new Date(d).toLocaleString("en-IN");
 }
+
 function renderTicket(t) {
+
     const box = document.getElementById("ticketBox");
-console.log(t);
+
+    console.log("FULL TICKET =", t);
+    console.log("ISSUED AT =", t.issuedAt);
+    console.log("VALID UPTO =", t.validUpto);
+
     box.innerHTML = `
         <div class="receipt">
 
@@ -129,7 +136,7 @@ console.log(t);
 
             <div class="row">
                 <span>Date :</span>
-                <span>${formatDate(t.issuedAt)}</span>
+                <span>${t.issuedAt ? formatDate(t.issuedAt) : "N/A"}</span>
             </div>
 
             <div class="row">
@@ -149,7 +156,7 @@ console.log(t);
 
             <div class="row">
                 <span>Valid Till :</span>
-                <span>${formatDate(t.validUpto)}</span>
+                <span>${t.validUpto ? formatDate(t.validUpto) : "N/A"}</span>
             </div>
 
             <div class="row">
