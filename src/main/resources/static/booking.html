@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pune Metro – Login</title>
+    <title>Pune Metro Ticket Booking</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -10,31 +10,61 @@
 
 <header class="top-bar">
     <div class="logo-box">
-        <img src="/images/pune-metro-logo.png">
+        <img src="/images/pune-metro-logo.png" alt="Pune Metro Logo">
         <div class="metro-logo">
             <div class="title">PUNE METRO</div>
-            <div class="subtitle">Welcome</div>
+            <div class="subtitle">Maha Metro</div>
         </div>
     </div>
+
+    <button id="darkToggle" class="dark-toggle">🌙</button>
 </header>
 
 <main class="container">
-    <section class="card" id="loginCard">
-        <h2>Verify Mobile Number</h2>
 
-        <label>Mobile Number</label>
-        <input id="mobile" placeholder="10-digit mobile" />
+    <!-- BOOKING -->
+    <section class="card">
+        <h2>Book Metro Ticket</h2>
 
-        <button class="primary-btn" onclick="sendOtp()">Send OTP</button>
+        <label>From Station</label>
+        <select id="fromStation"></select>
 
-        <div id="otpBox" class="hidden">
-            <label>Enter OTP</label>
-            <input id="otp" placeholder="OTP" />
-            <button class="primary-btn" onclick="verifyOtp()">Verify OTP</button>
+        <button type="button" class="swap-btn" onclick="swapStations()">⇅</button>
+
+        <label>To Station</label>
+        <select id="toStation"></select>
+
+       <button id="bookBtn" class="primary-btn" disabled>
+    BOOK TICKET
+</button>
+    </section>
+
+    <!-- LOADER -->
+    <section id="loader" class="card skeleton hidden">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line short"></div>
+    </section>
+
+    <!-- TICKET -->
+    <section id="ticketSection" class="card hidden slide-in">
+        <h2>Your Ticket</h2>
+
+        <!-- IMPORTANT: keep empty, JS will inject structured HTML -->
+        <div id="ticketBox"></div>
+
+        <div class="actions">
+            <button class="secondary-btn" onclick="openPrint()">Print Ticket</button>
+            <button class="secondary-btn" onclick="openQR()">View QR</button>
         </div>
     </section>
+
 </main>
 
-<script src="/js/login.js"></script>
+<footer>
+    © Maha Metro – Pune Metro Rail Corporation
+</footer>
+
+<script src="/js/app.js"></script>
 </body>
 </html>

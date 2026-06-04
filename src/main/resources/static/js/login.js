@@ -1,8 +1,6 @@
 const API = "/api";
 
-/* =====================
-   SEND OTP
-===================== */
+/* SEND OTP */
 function sendOtp() {
     const mobileInput = document.getElementById("mobile");
     const mobile = mobileInput.value.trim();
@@ -18,7 +16,7 @@ function sendOtp() {
             "Content-Type": "application/x-www-form-urlencoded"
         },
         body: `mobile=${encodeURIComponent(mobile)}`,
-        credentials: "include" // 🔴 REQUIRED
+        credentials: "include"
     })
     .then(res => {
         if (!res.ok) {
@@ -34,9 +32,7 @@ function sendOtp() {
     });
 }
 
-/* =====================
-   VERIFY OTP
-===================== */
+/* VERIFY OTP */
 function verifyOtp() {
     const mobile = document.getElementById("mobile").value.trim();
     const otp = document.getElementById("otp").value.trim();
@@ -52,7 +48,7 @@ function verifyOtp() {
             "Content-Type": "application/x-www-form-urlencoded"
         },
         body: `mobile=${encodeURIComponent(mobile)}&otp=${encodeURIComponent(otp)}`,
-        credentials: "include" // 🔴 REQUIRED
+        credentials: "include"
     })
     .then(res => {
         if (!res.ok) {
@@ -61,8 +57,7 @@ function verifyOtp() {
         return res.text();
     })
     .then(() => {
-        // session is now created
-        window.location.href = "/index.html";
+        window.location.href = "/dashboard.html";
     })
     .catch(() => {
         alert("Invalid OTP");
