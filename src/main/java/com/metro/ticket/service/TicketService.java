@@ -30,7 +30,10 @@ public class TicketService {
         this.qrService = qrService;
     }
 
-    public Ticket issueRouteTicket(String fromStation, String toStation) {
+    public Ticket issueRouteTicket(
+            String fromStation,
+            String toStation,
+            String mobile) {
 
         Station from = stationRepo.findFirstByNameIgnoreCase(fromStation.trim())
                 .orElseThrow(() -> new RuntimeException("Invalid FROM station"));
@@ -39,7 +42,7 @@ public class TicketService {
                 .orElseThrow(() -> new RuntimeException("Invalid TO station"));
 
         Ticket t = new Ticket();
-
+        t.setMobileNumber(mobile);
         t.setFromStation(from.getName());
         t.setToStation(to.getName());
 
@@ -136,5 +139,10 @@ public class TicketService {
         System.out.println("VALID  = " + t.getValidUpto());
 
         return ticketRepo.save(t);
+    }
+
+    public java.util.List<Ticket> getTicketsByMobile(String mobile) {
+
+        return ticketRepo.findByMobileNumber(mobile);
     }
 }

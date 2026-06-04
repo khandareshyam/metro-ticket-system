@@ -51,6 +51,9 @@ public class Ticket {
     // ===== getters & setters =====
 
     private String status;
+    @Column(name = "mobile_number")
+private String mobileNumber;
+
 
     public Long getId() {
         return id;
@@ -158,5 +161,11 @@ public class Ticket {
 
     public void setPlatformNo(Integer platformNo) {
         this.platformNo = platformNo;
-    }
+    }public String getMobileNumber() {
+    return mobileNumber;
+}
+
+public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
+}
 }

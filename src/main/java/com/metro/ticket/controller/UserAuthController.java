@@ -86,7 +86,7 @@ public class UserAuthController {
         userRepository.save(user);
 
         session.setAttribute("USER", user.getId());
-
+        session.setAttribute("MOBILE", mobile);
         return "OTP verified";
     }
 }

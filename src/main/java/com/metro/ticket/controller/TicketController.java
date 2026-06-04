@@ -18,7 +18,7 @@ public class TicketController {
 
     // FIXED CONSTRUCTOR
     public TicketController(TicketService ticketService,
-                            TicketPdfService pdfService) {
+            TicketPdfService pdfService) {
         this.ticketService = ticketService;
         this.pdfService = pdfService;
     }
@@ -31,7 +31,12 @@ public class TicketController {
             HttpSession session) {
 
         try {
-            Ticket t = ticketService.issueRouteTicket(fromStation, toStation);
+            String mobile = (String) session.getAttribute("MOBILE");
+
+            Ticket t = ticketService.issueRouteTicket(
+                    fromStation,
+                    toStation,
+                    mobile);
             return ResponseEntity.ok(t);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,5 +65,15 @@ public class TicketController {
         return ResponseEntity.ok()
                 .header("Content-Type", "application/pdf")
                 .body(pdf);
+    }
+
+    @GetMapping("/my-tickets")
+    public ResponseEntity<?> myTickets(
+            HttpSession session) {
+
+        String mobile = (String) session.getAttribute("MOBILE");
+
+        return ResponseEntity.ok(
+                ticketService.getTicketsByMobile(mobile));
     }
 }
