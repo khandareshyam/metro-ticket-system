@@ -23,11 +23,22 @@
 
     <section class="card">
 
-        <h2>Journey History</h2>
+        <h2>My Tickets</h2>
 
-        <p>
-            Journey history will be available in the next phase.
-        </p>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="historyBody">
+            </tbody>
+        </table>
 
         <br>
 
@@ -44,6 +55,34 @@
 <footer>
     © Maha Metro – Pune Metro Rail Corporation
 </footer>
+
+<script>
+
+fetch("/api/tickets/my-tickets", {
+    credentials: "include"
+})
+.then(r => r.json())
+.then(data => {
+
+    const body =
+        document.getElementById("historyBody");
+
+    body.innerHTML = "";
+
+    data.forEach(t => {
+
+        body.innerHTML += `
+        <tr>
+            <td>${t.id}</td>
+            <td>${t.fromStation}</td>
+            <td>${t.toStation}</td>
+            <td>₹${t.fare}</td>
+            <td>${t.status}</td>
+        </tr>`;
+    });
+});
+
+</script>
 
 </body>
 </html>
