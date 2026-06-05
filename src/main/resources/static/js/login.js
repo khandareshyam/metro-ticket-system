@@ -1,65 +1,102 @@
 const API = "/api";
 
+let confirmationResult;
+
 /* SEND OTP */
-function sendOtp() {
-    const mobileInput = document.getElementById("mobile");
-    const mobile = mobileInput.value.trim();
+async function sendOtp() {
+
+    const mobile =
+        document.getElementById("mobile")
+        .value
+        .trim();
 
     if (!mobile) {
         alert("Enter mobile number");
         return;
     }
 
-    fetch(`${API}/auth/send-otp`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `mobile=${encodeURIComponent(mobile)}`,
-        credentials: "include"
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error("OTP send failed");
-        }
-        return res.text();
-    })
-    .then(() => {
-        document.getElementById("otpBox").classList.remove("hidden");
-    })
-    .catch(() => {
+    try {
+
+        window.recaptchaVerifier =
+            new firebase.auth.RecaptchaVerifier(
+                "recaptcha-container",
+                {
+                    size: "normal"
+                }
+            );
+
+        const phoneNumber =
+            "+91" + mobile;
+
+        confirmationResult =
+            await firebase.auth()
+                .signInWithPhoneNumber(
+                    phoneNumber,
+                    window.recaptchaVerifier
+                );
+
+        document
+            .getElementById("otpBox")
+            .classList
+            .remove("hidden");
+
+        alert("OTP sent");
+
+    } catch (e) {
+
+        console.error(e);
+
         alert("Failed to send OTP");
-    });
+    }
 }
 
 /* VERIFY OTP */
-function verifyOtp() {
-    const mobile = document.getElementById("mobile").value.trim();
-    const otp = document.getElementById("otp").value.trim();
+async function verifyOtp() {
+
+    const mobile =
+        document.getElementById("mobile")
+        .value
+        .trim();
+
+    const otp =
+        document.getElementById("otp")
+        .value
+        .trim();
 
     if (!otp) {
         alert("Enter OTP");
         return;
     }
 
-    fetch(`${API}/auth/verify-otp`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `mobile=${encodeURIComponent(mobile)}&otp=${encodeURIComponent(otp)}`,
-        credentials: "include"
-    })
-    .then(res => {
+    try {
+
+        await confirmationResult.confirm(otp);
+
+        const res =
+            await fetch(
+                `${API}/auth/firebase-login`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                        "application/x-www-form-urlencoded"
+                    },
+                    body:
+                    `mobile=${encodeURIComponent(mobile)}`,
+                    credentials: "include"
+                });
+
         if (!res.ok) {
-            throw new Error("Invalid OTP");
+            throw new Error();
         }
-        return res.text();
-    })
-    .then(() => {
-        window.location.href = "/dashboard.html";
-    })
-    .catch(() => {
+
+        window.location.href =
+            "/dashboard.html";
+
+    } catch (e) {
+
+        console.error(e);
+
         alert("Invalid OTP");
-    });
+    }
 }

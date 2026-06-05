@@ -24,7 +24,7 @@
 
         <label>Mobile Number</label>
         <input id="mobile" placeholder="10-digit mobile" />
-
+<div id="recaptcha-container"></div>
         <button class="primary-btn" onclick="sendOtp()">Send OTP</button>
 
         <div id="otpBox" class="hidden">
@@ -34,7 +34,11 @@
         </div>
     </section>
 </main>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
+<script src="/js/firebase-config.js"></script>
 <script src="/js/login.js"></script>
 </body>
 </html>
