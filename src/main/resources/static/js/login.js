@@ -4,7 +4,7 @@ let confirmationResult;
 
 /* SEND OTP */
 async function sendOtp() {
-
+firebase.auth().settings.appVerificationDisabledForTesting = true;
     const mobile =
         document.getElementById("mobile")
         .value
@@ -17,13 +17,21 @@ async function sendOtp() {
 
     try {
 
-        window.recaptchaVerifier =
-            new firebase.auth.RecaptchaVerifier(
-                "recaptcha-container",
-                {
-                    size: "normal"
-                }
-            );
+        if (!window.recaptchaVerifier) {
+
+   if (!window.recaptchaVerifier) {
+
+    window.recaptchaVerifier =
+        new firebase.auth.RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "normal"
+            }
+        );
+
+    await window.recaptchaVerifier.render();
+}
+}
 
         const phoneNumber =
             "+91" + mobile;
